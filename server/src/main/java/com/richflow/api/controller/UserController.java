@@ -1,8 +1,8 @@
 package com.convenientBook.api.controller;
 
-import com.convenientBook.api.domain.User;
-import com.convenientBook.api.request.UserCreate;
-import com.convenientBook.api.service.UserService;
+import com.richflow.api.domain.User;
+import com.richflow.api.request.UserCreate;
+import com.richflow.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
