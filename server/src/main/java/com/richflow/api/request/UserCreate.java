@@ -1,4 +1,4 @@
-package com.convenientBook.api.request;
+package com.richflow.api.request;
 
 import lombok.*;
 

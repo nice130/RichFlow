@@ -1,4 +1,4 @@
-package com.convenientBook.api.domain;
+package com.richflow.api.domain;
 
 public class Accounting {
 }

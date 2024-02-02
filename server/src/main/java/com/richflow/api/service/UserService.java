@@ -1,4 +1,4 @@
-package com.convenientBook.api.service;
+package com.richflow.api.service;
 
 import com.richflow.api.domain.User;
 import com.richflow.api.repository.UserRepository;

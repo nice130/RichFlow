@@ -1,4 +1,4 @@
-package com.convenientBook.api.repository;
+package com.richflow.api.repository;
 
 import com.richflow.api.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

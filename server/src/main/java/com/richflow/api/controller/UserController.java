@@ -1,4 +1,4 @@
-package com.convenientBook.api.controller;
+package com.richflow.api.controller;
 
 import com.richflow.api.domain.User;
 import com.richflow.api.request.UserCreate;
