@@ -75,6 +75,9 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date blockDate;
 
+    @Column(name = "member_nickname")
+    private String memberNickname;
+
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 //    private Set<Accounting> accountings = new HashSet<>();
 
