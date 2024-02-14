@@ -1,6 +1,6 @@
 export const signUp = async ({ email, password, nickname }) => {
     try {
-        const response = await fetch('/api/users/join', {
+        const response = await fetch('/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -8,7 +8,7 @@ export const signUp = async ({ email, password, nickname }) => {
             body: JSON.stringify({
                 memberId: email,
                 memberPassword: password,
-                memberNickname: nickname,
+                // memberNickname: nickname,
             }),
         });
 

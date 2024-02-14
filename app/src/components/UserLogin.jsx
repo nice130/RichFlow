@@ -1,28 +1,35 @@
 import React, { useState } from "react";
+import { signUp } from "../service/api";
 
 export default function UserLogin() {
-    const [userId,setUserId] = useState();
-    const [userPass,setUserPass] = useState();
+    const [email,setEmail] = useState();
+    const [password,setPassword] = useState();
 
-    const Login = () =>{
-        const memberId=document.getElementById('memberId').value;
-        const memberPassword=document.getElementById('memberPassword').value;
-        console.log('로그인'+memberId);
-        console.log('로그인'+memberPassword);
-    }
+    const LoginSubmit = async (e) => {
+        e.preventDefault();
+        // 로그인
+        const response = await signUp({ email, password });
+        if (response.success) {
+            console.log('로그인 성공:', response.token);
+        } else {
+            // 실패 처리
+            console.error('로그인 실패');
+        }
+    };
     
     return (
         <div>
-            <div>
-                id :
-                <input type="text" id="memberId"/>
-            </div>
-            <div>
-                pass :
-                <input type="password" id="memberPassword" />
-            </div>
-
-            <button onClick={Login}>로그인</button>
+            <form onSubmit={LoginSubmit}>
+                <div>
+                    id :
+                    <input type="text" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                </div>
+                <div>
+                    pass :
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                </div>
+                <button type="submit">로그인</button>
+            </form>
         </div>
     )
 }
