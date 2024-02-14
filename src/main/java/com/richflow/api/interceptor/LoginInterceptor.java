@@ -4,20 +4,23 @@ import com.richflow.api.request.UserLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+@Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HttpSession session = request.getSession();
-        String id = (String) session.getAttribute("userId");
-
-        if(id == null) {
-            response.sendRedirect("/");
-            return false;
-        }
+//        log.info("pre handle");
+//        HttpSession session = request.getSession();
+//        String id = (String) session.getAttribute("userId");
+//
+//        if(id == null) {
+//            response.sendRedirect("/");
+//            return false;
+//        }
         return true;
     }
 

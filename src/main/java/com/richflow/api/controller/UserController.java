@@ -48,14 +48,14 @@ public class UserController {
 
     @PostMapping("/join")
     public String join(@RequestBody UserLogin userLogin, HttpSession session) {
+        log.info("가입도전");
         try {
             String id = (String) session.getAttribute("userId");
             if(id != null) {
                 return "redirect:/";
-            } else {
-                User user = userService.createUser(userLogin);
-                return "redirect:/";
             }
+            User user = userService.createUser(userLogin);
+            return "fake-token-api";
         } catch (Exception e) {
             return "redirect:/join?result=fail";
         }
