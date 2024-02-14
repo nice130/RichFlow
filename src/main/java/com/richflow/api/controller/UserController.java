@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/users")
@@ -32,7 +35,7 @@ public class UserController {
         try {
             if (userService.getByCredentials(userLogin.getMemberId(), userLogin.getMemberPassword())) {
                 session.setAttribute("userId", userLogin.getMemberId());
-                return "redirect:/";
+                return "fake-jwt-token";
             } else {
                 return "비밀번호를 확인하세요";
             }
@@ -47,17 +50,21 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(@RequestBody UserLogin userLogin, HttpSession session) {
+    public HashMap<String, String> join(@RequestBody UserLogin userLogin, HttpSession session) {
         log.info("가입도전");
+        HashMap<String, String> resultMap = new HashMap<>();
         try {
             String id = (String) session.getAttribute("userId");
             if(id != null) {
-                return "redirect:/";
+                return resultMap;
             }
             User user = userService.createUser(userLogin);
-            return "fake-token-api";
+
+            resultMap.put("token", "fake-jwt-token");
+            return resultMap;
         } catch (Exception e) {
-            return "redirect:/join?result=fail";
+//            return "redirect:/join?result=fail";
+            return resultMap;
         }
     }
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signUp } from "../service/api";
+import { login } from "../service/api";
 
 export default function UserLogin() {
     const [email,setEmail] = useState();
@@ -8,7 +8,7 @@ export default function UserLogin() {
     const LoginSubmit = async (e) => {
         e.preventDefault();
         // 로그인
-        const response = await signUp({ email, password });
+        const response = await login({ email, password });
         if (response.success) {
             console.log('로그인 성공:', response.token);
         } else {

@@ -1,6 +1,8 @@
 import {useState} from "react";
 import {signUp} from "../service/api.js";
+import {useNavigate} from 'react-router-dom';
 export default function UserJoin() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [nickname, setNickname] = useState('');
@@ -10,7 +12,8 @@ export default function UserJoin() {
         // 회원가입 로직 구현
         const response = await signUp({ email, password, nickname });
         if (response.success) {
-            console.log('회원가입 성공:', response.token);
+            console.log('회원가입 성공:');
+            navigate('/login', { state: { message: 'Signup successful. Please log in.' } });
         } else {
             // 실패 처리
             console.error('회원가입 실패');
