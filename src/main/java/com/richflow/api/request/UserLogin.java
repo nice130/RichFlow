@@ -8,12 +8,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class UserLogin {
 
+    private Long memberIdx;
     private String memberId;
     private String memberPassword;
     private String joinType;
-    private String agreeSmsStatus;
-    private String agreeEmailStatus;
-    private String createIp;
     private String memberNickname;
-
 }

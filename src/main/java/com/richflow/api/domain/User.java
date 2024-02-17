@@ -19,7 +19,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(name = "member_idx")
     private Long memberIdx;
 
     @Column(name = "member_id")

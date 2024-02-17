@@ -2,6 +2,7 @@ package com.richflow.api.controller;
 
 import com.richflow.api.domain.User;
 import com.richflow.api.request.UserLogin;
+import com.richflow.api.security.TokenProvider;
 import com.richflow.api.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -19,23 +19,14 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-
-    @GetMapping("/login")
-    public String loginChk(HttpSession session) {
-        String id = (String) session.getAttribute("userId");
-        if(id != null) {
-            return "redirect:/";
-        } else {
-            return "login";
-        }
-    }
+    private final TokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public String doLogin(@RequestBody UserLogin userLogin, HttpSession session) {
+    public String doLogin(@RequestBody UserLogin userLogin) {
         try {
+            log.info("login");
             if (userService.getByCredentials(userLogin.getMemberId(), userLogin.getMemberPassword())) {
-                session.setAttribute("userId", userLogin.getMemberId());
-                return "fake-jwt-token";
+                return tokenProvider.create(userLogin);
             } else {
                 return "비밀번호를 확인하세요";
             }
@@ -50,27 +41,22 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public HashMap<String, String> join(@RequestBody UserLogin userLogin, HttpSession session) {
+    public HashMap<String, String> join(@RequestBody UserLogin userLogin) {
         log.info("가입도전");
         HashMap<String, String> resultMap = new HashMap<>();
         try {
-            String id = (String) session.getAttribute("userId");
-            if(id != null) {
-                return resultMap;
-            }
             User user = userService.createUser(userLogin);
+            userLogin.setMemberIdx(user.getMemberIdx());
 
-            resultMap.put("token", "fake-jwt-token");
+            resultMap.put("token", tokenProvider.create(userLogin));
             return resultMap;
         } catch (Exception e) {
-//            return "redirect:/join?result=fail";
             return resultMap;
         }
     }
 
     @PostMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
+    public String logout() {
         return "redirect:/";
     }
 

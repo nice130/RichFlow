@@ -27,11 +27,6 @@ public class UserService {
             user.setMemberPassword(userLogin.getMemberPassword());
             user.setJoinType(userLogin.getJoinType());
             user.setMemberStatus("Y");
-            user.setAgreeSmsStatus(userLogin.getAgreeSmsStatus());
-            user.setAgreeEmailStatus(userLogin.getAgreeEmailStatus());
-            user.setCreateDate(CommonUtil.getTimestamp());
-            user.setCreateIp("127.0.0.1");
-            user.setMaintenancePeriod(CommonUtil.getTimestamp("YEAR", 1));
             user.setMemberNickname(userLogin.getMemberNickname());
             userRepository.save(user);
             return user;
