@@ -19,69 +19,24 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_idx")
-    private Long memberIdx;
+    @Column(name = "user_idx")
+    private Long userIdx;
 
-    @Column(name = "member_id")
-    private String memberId;
+    @Column(name = "user_id")
+    private String userId;
 
-    @Column(name = "member_password")
-    private String memberPassword;
+    @Column(name = "user_password")
+    private String userPassword;
 
     @Column(name = "join_type")
     private String joinType;
 
-    @Column(name = "member_sns_id")
-    private String memberSnsId;
+    @Column(name = "user_sns_id")
+    private String userSnsId;
 
-    @Column(name = "member_status")
-    private String memberStatus;
+    @Column(name = "user_status")
+    private String userStatus;
 
-    @Column(name = "agree_sms_status")
-    private String agreeSmsStatus;
-
-    @Column(name = "agree_email_status")
-    private String agreeEmailStatus;
-
-    @Column(name = "agree_sms_status_update_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date agreeSmsStatusUpdateDate;
-
-    @Column(name = "agree_email_status_update_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date agreeEmailStatusUpdateDate;
-
-    @Column(name = "create_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
-
-    @Column(name = "create_ip")
-    private String createIp;
-
-    @Column(name = "maintenance_period")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date maintenancePeriod;
-
-    @Column(name = "maintenance_period_edit_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date maintenancePeriodEditDate;
-
-    @Column(name = "maintenance_period_edit_ip")
-    private String maintenancePeriodEditIp;
-
-    @Column(name = "leave_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date leaveDate;
-
-    @Column(name = "block_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date blockDate;
-
-    @Column(name = "member_nickname")
-    private String memberNickname;
-
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    private Set<Accounting> accountings = new HashSet<>();
-
-    // Getters and setters...
+    @Column(name = "user_nickname")
+    private String userNickname;
 }

@@ -25,7 +25,9 @@ public class UserController {
     public String doLogin(@RequestBody UserLogin userLogin) {
         try {
             log.info("login");
-            if (userService.getByCredentials(userLogin.getMemberId(), userLogin.getMemberPassword())) {
+            String userId = userLogin.getUserId();
+            if (userService.getByCredentials(userId, userLogin.getUserPassword())) {
+                userLogin.setUserIdx(userService.getIdxByUserId(userId));
                 return tokenProvider.create(userLogin);
             } else {
                 return "비밀번호를 확인하세요";
@@ -46,7 +48,7 @@ public class UserController {
         HashMap<String, String> resultMap = new HashMap<>();
         try {
             User user = userService.createUser(userLogin);
-            userLogin.setMemberIdx(user.getMemberIdx());
+            userLogin.setUserIdx(user.getUserIdx());
 
             resultMap.put("token", tokenProvider.create(userLogin));
             return resultMap;

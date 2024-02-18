@@ -18,9 +18,9 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
-            String memIdx = tokenProvider.validate(parseBearerToken(request));
-            log.info("memIdx :: " + memIdx);
-            if(memIdx == null) {
+            String userIdx = tokenProvider.validate(parseBearerToken(request));
+            log.info("userIdx :: " + userIdx);
+            if(userIdx == null) {
                 return false;
             }
         } catch (Exception e) {
