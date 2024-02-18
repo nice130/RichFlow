@@ -8,9 +8,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class UserLogin {
 
-    private Long memberIdx;
-    private String memberId;
-    private String memberPassword;
+    private Long userIdx;
+    private String userId;
+    private String userPassword;
     private String joinType;
-    private String memberNickname;
+    private String userNickname;
 }

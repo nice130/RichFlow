@@ -20,14 +20,14 @@ public class UserService {
 
     public User createUser(UserLogin userLogin) throws BadRequestException {
         User user = new User();
-        if(userRepository.existsByMemberId(userLogin.getMemberId())) {
+        if(userRepository.existsByUserId(userLogin.getUserId())) {
             throw new BadRequestException("이미 사용중인 아이디입니다.");
         } else {
-            user.setMemberId(userLogin.getMemberId());
-            user.setMemberPassword(userLogin.getMemberPassword());
+            user.setUserId(userLogin.getUserId());
+            user.setUserPassword(userLogin.getUserPassword());
             user.setJoinType(userLogin.getJoinType());
-            user.setMemberStatus("Y");
-            user.setMemberNickname(userLogin.getMemberNickname());
+            user.setUserStatus("Y");
+            user.setUserNickname(userLogin.getUserNickname());
             userRepository.save(user);
             return user;
         }
@@ -37,13 +37,17 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public boolean getByCredentials(final String id, final String password) {
-        return getPasswordById(id).equals(password);
+    public Long getIdxByUserId(final String id) {
+        return userRepository.findByUserIdx(id);
     }
 
-    public String getPasswordById(String id) {
-        User user = userRepository.findByMemberId(id);
-        return user.getMemberPassword();
+    public boolean getByCredentials(final String id, final String password) {
+        return getPasswordByUserId(id).equals(password);
+    }
+
+    public String getPasswordByUserId(String id) {
+        User user = userRepository.findByUserId(id);
+        return user.getUserPassword();
     }
 
 }

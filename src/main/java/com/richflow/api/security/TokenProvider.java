@@ -26,7 +26,7 @@ public class TokenProvider {
         // JWT Token 생성
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setSubject(String.valueOf(userLogin.getMemberIdx())) // sub
+                .setSubject(String.valueOf(userLogin.getUserIdx())) // sub
                 .setIssuer("richflow app")            // iss
                 .setIssuedAt(new Date())              // iat
                 .setExpiration(expiryDate)            // exp
