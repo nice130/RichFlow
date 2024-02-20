@@ -50,6 +50,12 @@ public class UserController {
             User user = userService.createUser(userLogin);
             userLogin.setUserIdx(user.getUserIdx());
 
+            // 회원 로그 입력
+
+            // 카테고리 입력
+
+            // 회원 자산내역 입력
+
             resultMap.put("token", tokenProvider.create(userLogin));
             return resultMap;
         } catch (Exception e) {

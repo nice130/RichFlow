@@ -1,0 +1,1 @@
+CREATE TYPE public."money_type" AS ENUM ('cash','card','credit');
