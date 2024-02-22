@@ -11,6 +11,6 @@ public class UserLogin {
     private Long userIdx;
     private String userId;
     private String userPassword;
-    private String joinType;
+    private String userJoinType;
     private String userNickname;
 }

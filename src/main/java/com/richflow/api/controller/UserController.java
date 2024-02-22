@@ -2,6 +2,7 @@ package com.richflow.api.controller;
 
 import com.richflow.api.domain.User;
 import com.richflow.api.request.UserLogin;
+import com.richflow.api.response.UserResponse;
 import com.richflow.api.security.TokenProvider;
 import com.richflow.api.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -22,18 +23,37 @@ public class UserController {
     private final TokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public String doLogin(@RequestBody UserLogin userLogin) {
+    public UserResponse doLogin(@RequestBody UserLogin userLogin) {
         try {
-            log.info("login");
             String userId = userLogin.getUserId();
             if (userService.getByCredentials(userId, userLogin.getUserPassword())) {
-                userLogin.setUserIdx(userService.getIdxByUserId(userId));
-                return tokenProvider.create(userLogin);
+                userLogin.setUserIdx(userService.getUserIdxByUserId(userId));
+                String token = tokenProvider.create(userLogin);
+
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("token", token);
+                data.put("nickname", userService.getUserNicknameByUserId(userId));
+
+                UserResponse response = UserResponse.builder()
+                        .code(200)
+                        .message("로그인 성공")
+                        .data(data)
+                        .build();
+                return response;
             } else {
-                return "비밀번호를 확인하세요";
+                UserResponse response = UserResponse.builder()
+                        .code(501)
+                        .message("비밀번호가 틀렸습니다.")
+                        .build();
+                return response;
             }
         } catch (Exception e) {
-            return "아이디를 확인하세요";
+            UserResponse response = UserResponse.builder()
+                    .code(502)
+                    .message("아이디가 없습니다.")
+                    .build();
+            log.info(String.valueOf(e));
+            return response;
         }
     }
 
