@@ -25,7 +25,7 @@ public class UserService {
         } else {
             user.setUserId(userLogin.getUserId());
             user.setUserPassword(userLogin.getUserPassword());
-            user.setJoinType(userLogin.getJoinType());
+            user.setUserJoinType(userLogin.getUserJoinType());
             user.setUserStatus("Y");
             user.setUserNickname(userLogin.getUserNickname());
             userRepository.save(user);
@@ -37,17 +37,22 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Long getIdxByUserId(final String id) {
-        return userRepository.findByUserIdx(id);
+    public Long getUserIdxByUserId(final String id) {
+        User user = userRepository.findByUserId(id);
+        return user.getUserIdx();
     }
 
     public boolean getByCredentials(final String id, final String password) {
         return getPasswordByUserId(id).equals(password);
     }
 
-    public String getPasswordByUserId(String id) {
+    public String getPasswordByUserId(final String id) {
         User user = userRepository.findByUserId(id);
         return user.getUserPassword();
     }
 
+    public String getUserNicknameByUserId(final String userId) {
+        User user = userRepository.findByUserId(userId);
+        return user.getUserNickname();
+    }
 }

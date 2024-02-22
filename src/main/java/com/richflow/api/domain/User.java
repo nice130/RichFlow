@@ -28,8 +28,8 @@ public class User {
     @Column(name = "user_password")
     private String userPassword;
 
-    @Column(name = "join_type")
-    private String joinType;
+    @Column(name = "user_join_type")
+    private String userJoinType;
 
     @Column(name = "user_sns_id")
     private String userSnsId;
@@ -39,4 +39,7 @@ public class User {
 
     @Column(name = "user_nickname")
     private String userNickname;
+
+    @Column(name = "user_create_at")
+    private Date userCreateAt;
 }
