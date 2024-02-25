@@ -1,4 +1,4 @@
-package com.richflow.api.repository;
+package com.richflow.api.repository.User;
 
 import com.richflow.api.domain.User.User;
 import org.springframework.data.jpa.repository.JpaRepository;
