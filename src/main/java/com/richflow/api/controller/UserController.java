@@ -1,11 +1,11 @@
 package com.richflow.api.controller;
 
-import com.richflow.api.domain.User;
-import com.richflow.api.request.UserLogin;
+import com.richflow.api.domain.User.User;
+import com.richflow.api.request.User.UserRequest;
 import com.richflow.api.response.UserResponse;
 import com.richflow.api.security.TokenProvider;
 import com.richflow.api.service.UserService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,37 +23,35 @@ public class UserController {
     private final TokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public UserResponse doLogin(@RequestBody UserLogin userLogin) {
+    public UserResponse doLogin(@RequestBody UserRequest userRequest) {
         try {
-            String userId = userLogin.getUserId();
-            if (userService.getByCredentials(userId, userLogin.getUserPassword())) {
-                userLogin.setUserIdx(userService.getUserIdxByUserId(userId));
-                String token = tokenProvider.create(userLogin);
+            String userId = userRequest.getUserId();
+            // 아이디 확인
+            if (!userService.getExistsByUserId(userId)) {
+                int code = 504; // 아이디가 없습니다.
+                return UserService.buildUserResponse(code);
+            }
+            // 아이디, 비밀번호 검증
+            if (userService.getByCredentials(userId, userRequest.getUserPassword())) {
+                // token 발급
+                userRequest.setUserIdx(userService.getUserIdxByUserId(userId));
+                String token = tokenProvider.create(userRequest);
 
+                // data set
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("token", token);
                 data.put("nickname", userService.getUserNicknameByUserId(userId));
 
-                UserResponse response = UserResponse.builder()
-                        .code(200)
-                        .message("로그인 성공")
-                        .data(data)
-                        .build();
-                return response;
+                int code = 200; // 성공
+                return UserService.buildUserResponse(code, data);
             } else {
-                UserResponse response = UserResponse.builder()
-                        .code(501)
-                        .message("비밀번호가 틀렸습니다.")
-                        .build();
-                return response;
+                int code = 501; // 비밀번호를 확인하세요
+                return UserService.buildUserResponse(code);
             }
         } catch (Exception e) {
-            UserResponse response = UserResponse.builder()
-                    .code(502)
-                    .message("아이디가 없습니다.")
-                    .build();
             log.info(String.valueOf(e));
-            return response;
+            int code = 600;
+            return UserService.buildUserResponse(code, String.valueOf(e));
         }
     }
 
@@ -63,23 +61,37 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public HashMap<String, String> join(@RequestBody UserLogin userLogin) {
-        log.info("가입도전");
-        HashMap<String, String> resultMap = new HashMap<>();
+    public UserResponse join(@RequestBody UserRequest userRequest, HttpServletRequest request) {
         try {
-            User user = userService.createUser(userLogin);
-            userLogin.setUserIdx(user.getUserIdx());
+            String userId = userRequest.getUserId();
+            if(userService.getExistsByUserId(userId)) {
+                int code = 503; // 이미 존재하는 아이디입니다.
+                return UserService.buildUserResponse(code);
+            }
+
+            User user = userService.createUser(userRequest);
+            userRequest.setUserIdx(user.getUserIdx());
 
             // 회원 로그 입력
+            userRequest.setUslgUpdateIp(request.getRemoteAddr());
+            userService.setUserLog(userRequest);
 
             // 카테고리 입력
 
             // 회원 자산내역 입력
 
-            resultMap.put("token", tokenProvider.create(userLogin));
-            return resultMap;
+            String token = tokenProvider.create(userRequest);
+
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("token", token);
+            data.put("nickname", userRequest.getUserNickname());
+
+            int code = 200; // 성공
+            return UserService.buildUserResponse(code, data);
         } catch (Exception e) {
-            return resultMap;
+            log.info(String.valueOf(e));
+            int code = 600;
+            return UserService.buildUserResponse(code, String.valueOf(e));
         }
     }
 

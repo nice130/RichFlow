@@ -1,16 +1,16 @@
-package com.richflow.api.request;
+package com.richflow.api.request.User;
 
 import lombok.*;
 
-import java.util.Date;
-
 @Getter @Setter
 @NoArgsConstructor
-public class UserLogin {
+public class UserRequest {
 
     private Long userIdx;
     private String userId;
     private String userPassword;
     private String userJoinType;
     private String userNickname;
+
+    private String uslgUpdateIp;
 }

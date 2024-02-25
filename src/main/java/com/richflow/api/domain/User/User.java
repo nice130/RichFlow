@@ -1,4 +1,4 @@
-package com.richflow.api.domain;
+package com.richflow.api.domain.User;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
