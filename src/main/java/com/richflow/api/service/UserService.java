@@ -1,15 +1,17 @@
 package com.richflow.api.service;
 
-import com.richflow.api.common.CommonUtil;
-import com.richflow.api.domain.User;
+import com.richflow.api.domain.User.User;
+import com.richflow.api.domain.User.UserCode;
 import com.richflow.api.repository.UserRepository;
 import com.richflow.api.request.UserLogin;
+import com.richflow.api.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -54,5 +56,22 @@ public class UserService {
     public String getUserNicknameByUserId(final String userId) {
         User user = userRepository.findByUserId(userId);
         return user.getUserNickname();
+    }
+
+    public static UserResponse buildUserResponse(int code, Map<String, Object> data) {
+        UserResponse userResponse = UserResponse.builder()
+                .code(code)
+                .message(UserCode.getMessage(code))
+                .data(data)
+                .build();
+        return userResponse;
+    }
+
+    public static UserResponse buildUserResponse(int code) {
+        UserResponse userResponse = UserResponse.builder()
+                .code(code)
+                .message(UserCode.getMessage(code))
+                .build();
+        return userResponse;
     }
 }

@@ -1,11 +1,10 @@
 package com.richflow.api.controller;
 
-import com.richflow.api.domain.User;
+import com.richflow.api.domain.User.User;
 import com.richflow.api.request.UserLogin;
 import com.richflow.api.response.UserResponse;
 import com.richflow.api.security.TokenProvider;
 import com.richflow.api.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,26 +33,16 @@ public class UserController {
                 data.put("token", token);
                 data.put("nickname", userService.getUserNicknameByUserId(userId));
 
-                UserResponse response = UserResponse.builder()
-                        .code(200)
-                        .message("로그인 성공")
-                        .data(data)
-                        .build();
-                return response;
+                int code = 200;
+                return UserService.buildUserResponse(code, data);
             } else {
-                UserResponse response = UserResponse.builder()
-                        .code(501)
-                        .message("비밀번호가 틀렸습니다.")
-                        .build();
-                return response;
+                int code = 501;
+                return UserService.buildUserResponse(code);
             }
         } catch (Exception e) {
-            UserResponse response = UserResponse.builder()
-                    .code(502)
-                    .message("아이디가 없습니다.")
-                    .build();
             log.info(String.valueOf(e));
-            return response;
+            int code = 502;
+            return UserService.buildUserResponse(code);
         }
     }
 
