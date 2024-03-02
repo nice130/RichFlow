@@ -1,10 +1,11 @@
-package com.richflow.api.controller;
+package com.richflow.api.controller.user;
 
-import com.richflow.api.domain.User.User;
-import com.richflow.api.request.User.UserRequest;
-import com.richflow.api.response.UserResponse;
+import com.richflow.api.domain.user.User;
+import com.richflow.api.request.user.UserRequest;
+import com.richflow.api.response.user.UserResponse;
 import com.richflow.api.security.TokenProvider;
-import com.richflow.api.service.UserService;
+import com.richflow.api.service.accountingTypes.AccountingTypesService;
+import com.richflow.api.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ public class UserController {
 
     private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final AccountingTypesService accountingTypesService;
+
 
     @PostMapping("/login")
     public UserResponse doLogin(@RequestBody UserRequest userRequest) {
@@ -68,7 +71,7 @@ public class UserController {
                 int code = 503; // 이미 존재하는 아이디입니다.
                 return UserService.buildUserResponse(code);
             }
-
+            // 회원 생성
             User user = userService.createUser(userRequest);
             userRequest.setUserIdx(user.getUserIdx());
 
@@ -77,6 +80,7 @@ public class UserController {
             userService.setUserLog(userRequest);
 
             // 카테고리 입력
+            accountingTypesService.saveBasicCategory(userRequest);
 
             // 회원 자산내역 입력
 
