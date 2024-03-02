@@ -1,6 +1,6 @@
-package com.richflow.api.repository.User;
+package com.richflow.api.repository.user;
 
-import com.richflow.api.domain.User.User;
+import com.richflow.api.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.richflow.api.response;
+package com.richflow.api.response.user;
 
 import lombok.Builder;
 import lombok.Getter;

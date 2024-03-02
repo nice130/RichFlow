@@ -1,4 +1,4 @@
-package com.richflow.api.domain.User;
+package com.richflow.api.domain.user;
 public class UserCode {
     public static final int SUCCESS = 200;
     public static final int FAILURE_PASSWORD_CHK = 501;

@@ -1,4 +1,4 @@
-package com.richflow.api.request.User;
+package com.richflow.api.request.user;
 
 import lombok.*;
 
