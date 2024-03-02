@@ -24,25 +24,31 @@ public class AccountingTypesService {
 
     public void saveBasicIncomeCategory(UserRequest userRequest) {
         List<String> income = AccountingTypesCode.INCOME;
+        int seq = 1;
         for(String in : income) {
             AccountingTypes accountingTypes = new AccountingTypes();
             accountingTypes.setUserIdx(userRequest.getUserIdx());
+            accountingTypes.setActSeq(seq);
             accountingTypes.setActEither("I");
             accountingTypes.setActCtgName(in);
             accountingTypes.setActCreateAt(CommonUtil.getTimestamp());
             accountingTypesRepository.save(accountingTypes);
+            seq++;
         }
     }
 
     public void saveBasicExpensesCategory(UserRequest userRequest) {
         List<String> expenses = AccountingTypesCode.EXPENSES;
+        int seq = 1;
         for(String ex : expenses) {
             AccountingTypes accountingTypes = new AccountingTypes();
             accountingTypes.setUserIdx(userRequest.getUserIdx());
+            accountingTypes.setActSeq(seq);
             accountingTypes.setActEither("O");
             accountingTypes.setActCtgName(ex);
             accountingTypes.setActCreateAt(CommonUtil.getTimestamp());
             accountingTypesRepository.save(accountingTypes);
+            seq++;
         }
     }
 }
