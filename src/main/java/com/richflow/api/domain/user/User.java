@@ -1,15 +1,12 @@
-package com.richflow.api.domain.User;
+package com.richflow.api.domain.user;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter @Setter
 @Entity

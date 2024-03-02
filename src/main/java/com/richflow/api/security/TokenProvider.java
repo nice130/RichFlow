@@ -1,6 +1,6 @@
 package com.richflow.api.security;
 
-import com.richflow.api.request.User.UserRequest;
+import com.richflow.api.request.user.UserRequest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

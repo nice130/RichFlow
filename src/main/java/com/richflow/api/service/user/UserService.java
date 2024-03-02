@@ -1,20 +1,18 @@
-package com.richflow.api.service;
+package com.richflow.api.service.user;
 
 import com.richflow.api.common.CommonUtil;
-import com.richflow.api.domain.User.User;
-import com.richflow.api.domain.User.UserCode;
-import com.richflow.api.domain.User.UserLog;
-import com.richflow.api.repository.User.UserLogRepository;
-import com.richflow.api.repository.User.UserRepository;
-import com.richflow.api.request.User.UserRequest;
-import com.richflow.api.response.UserResponse;
+import com.richflow.api.domain.user.User;
+import com.richflow.api.domain.user.UserCode;
+import com.richflow.api.domain.user.UserLog;
+import com.richflow.api.repository.user.UserLogRepository;
+import com.richflow.api.repository.user.UserRepository;
+import com.richflow.api.request.user.UserRequest;
+import com.richflow.api.response.user.UserResponse;
 import com.richflow.api.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +66,7 @@ public class UserService {
     public void setUserLog(UserRequest userRequest) {
         UserLog userLog = new UserLog();
         userLog.setUserIdx(userRequest.getUserIdx());
-        userLog.setUslgUpdateIp("");
+        userLog.setUslgUpdateIp(userRequest.getUslgUpdateIp());
         userLog.setUslgUpdateAt(CommonUtil.getTimestamp());
         userLogRepository.save(userLog);
     }
