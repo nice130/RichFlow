@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.richflow.api.domain.accountingTypes.ActEither.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class AccountingTypesService {
             AccountingTypes accountingTypes = new AccountingTypes();
             accountingTypes.setUserIdx(userRequest.getUserIdx());
             accountingTypes.setActSeq(seq);
-            accountingTypes.setActEither("I");
+            accountingTypes.setActEither(I);
             accountingTypes.setActCtgName(in);
             accountingTypes.setActCreateAt(CommonUtil.getTimestamp());
             accountingTypesRepository.save(accountingTypes);
@@ -44,7 +46,7 @@ public class AccountingTypesService {
             AccountingTypes accountingTypes = new AccountingTypes();
             accountingTypes.setUserIdx(userRequest.getUserIdx());
             accountingTypes.setActSeq(seq);
-            accountingTypes.setActEither("O");
+            accountingTypes.setActEither(O);
             accountingTypes.setActCtgName(ex);
             accountingTypes.setActCreateAt(CommonUtil.getTimestamp());
             accountingTypesRepository.save(accountingTypes);

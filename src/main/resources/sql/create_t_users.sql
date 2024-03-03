@@ -10,7 +10,7 @@ CREATE SEQUENCE public.user_idx
 	NO CYCLE;
 
 CREATE TABLE public.t_users (
-	user_idx int4 DEFAULT nextval('user_idx'::regclass) NOT NULL,
+	user_idx int8 DEFAULT nextval('user_idx'::regclass) NOT NULL,
 	user_id varchar(50) NULL,
 	user_password varchar(64) NULL,
 	user_join_type varchar(10) NULL,

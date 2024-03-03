@@ -9,8 +9,8 @@ CREATE SEQUENCE public.uslg_idx_seq
 	NO CYCLE;
 
 CREATE TABLE t_users_log (
-	uslg_idx	int	default nextval('uslg_idx_seq'::regclass) not null,
-	user_idx	int	NOT null,
+	uslg_idx	int8	default nextval('uslg_idx_seq'::regclass) not null,
+	user_idx	int8	NOT null,
 	uslg_update_ip	varchar(15)	NULL,
 	uslg_update_at	timestamp	NULL,
 	CONSTRAINT pk_t_users_log PRIMARY KEY (uslg_idx)

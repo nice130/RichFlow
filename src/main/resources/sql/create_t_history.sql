@@ -10,12 +10,12 @@ CREATE SEQUENCE public.t_history_seq
 	NO CYCLE;
 
 CREATE TABLE public.t_history (
-	history_idx int4 DEFAULT nextval('t_history_seq'::regclass) NOT NULL,
-	ac_idx int4 NOT NULL,
-	user_idx int4 NOT NULL,
-	act_idx int4 NOT NULL,
-	history_act_either public.act_either NULL,
-	history_ac_money_type public.money_type NULL,
+	history_idx int8 DEFAULT nextval('t_history_seq'::regclass) NOT NULL,
+	ac_idx int8 NOT NULL,
+	user_idx int8 NOT NULL,
+	act_idx int8 NOT NULL,
+	history_act_either varchar(1) NULL,
+	history_ac_money_type varchar(10) NULL,
 	history_name varchar(50) NULL,
 	history_amounts int4 NULL,
 	history_memo text NULL,
