@@ -25,9 +25,9 @@ public class AccountingTypes {
     @Column(name = "act_parent_idx")
     private Long actParentIdx;
 
-    // enum type 추가
-    @Column(name = "act_eidther")
-    private String actEither;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "act_either")
+    private ActEither actEither;
 
     @Column(name = "act_ctg_name")
     private String actCtgName;

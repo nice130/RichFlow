@@ -5,6 +5,7 @@ import com.richflow.api.request.user.UserRequest;
 import com.richflow.api.response.user.UserResponse;
 import com.richflow.api.security.TokenProvider;
 import com.richflow.api.service.accountingTypes.AccountingTypesService;
+import com.richflow.api.service.accounts.AccountsService;
 import com.richflow.api.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final AccountingTypesService accountingTypesService;
+    private final AccountsService accountsService;
 
 
     @PostMapping("/login")
@@ -83,6 +85,7 @@ public class UserController {
             accountingTypesService.saveBasicCategory(userRequest);
 
             // 회원 자산내역 입력
+            accountsService.saveBasicAccounts(userRequest);
 
             String token = tokenProvider.create(userRequest);
 

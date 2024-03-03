@@ -14,7 +14,7 @@ CREATE TABLE public.t_accounts (
 	user_idx int4 NOT NULL,
 	ac_level int4 NOT NULL,
 	ac_parent_level int4 NOT NULL,
-	ac_money_type public.money_type NULL,
+	ac_money_type varchar(10) NULL,
 	ac_name varchar(50) NULL,
 	ac_seq int4 NULL,
 	ac_create_at timestamp NULL,

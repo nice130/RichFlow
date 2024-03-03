@@ -11,7 +11,7 @@ CREATE TABLE public.t_accounting_types (
 	act_idx int4 DEFAULT nextval('t_accounting_types_seq'::regclass) NOT NULL,
 	user_idx int4 NOT NULL,
 	act_parent_idx int4 NULL,
-	act_either public.act_either NULL,
+	act_either varchar(1) NULL,
 	act_ctg_name varchar(50) NULL,
 	act_seq int4 NULL,
 	act_create_at timestamp NULL,
