@@ -10,8 +10,8 @@ CREATE SEQUENCE public.t_accounts_seq
 	NO CYCLE;
 
 CREATE TABLE public.t_accounts (
-	ac_idx int4 DEFAULT nextval('t_accounts_seq'::regclass) NOT NULL,
-	user_idx int4 NOT NULL,
+	ac_idx int8 DEFAULT nextval('t_accounts_seq'::regclass) NOT NULL,
+	user_idx int8 NOT NULL,
 	ac_level int4 NOT NULL,
 	ac_parent_level int4 NOT NULL,
 	ac_money_type varchar(10) NULL,
