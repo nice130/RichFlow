@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.richflow.api.domain.accountingTypes.ActEither.*;
+import static com.richflow.api.domain.enumType.ActEither.*;
 
 @Slf4j
 @Service

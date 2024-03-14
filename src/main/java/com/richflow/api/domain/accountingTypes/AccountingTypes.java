@@ -1,5 +1,6 @@
 package com.richflow.api.domain.accountingTypes;
 
+import com.richflow.api.domain.enumType.ActEither;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
