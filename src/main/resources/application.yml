@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    url: jdbc:postgresql://ep-wispy-scene-a1ajzwow.ap-southeast-1.aws.neon.tech:5432/book
+    username: mh.lee239
+    password: hSaDcMFC05sm
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
