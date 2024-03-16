@@ -1,11 +1,11 @@
 package com.richflow.api.domain.accounts;
 
+import com.richflow.api.domain.enumType.MoneyType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import java.util.Date;
 

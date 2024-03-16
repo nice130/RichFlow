@@ -1,1 +1,0 @@
-CREATE TYPE public."act_either" AS ENUM ('I', 'O');

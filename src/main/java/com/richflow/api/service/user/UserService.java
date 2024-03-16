@@ -2,7 +2,7 @@ package com.richflow.api.service.user;
 
 import com.richflow.api.common.CommonUtil;
 import com.richflow.api.domain.user.User;
-import com.richflow.api.domain.user.UserCode;
+import com.richflow.api.domain.user.UserResponseCode;
 import com.richflow.api.domain.user.UserLog;
 import com.richflow.api.repository.user.UserLogRepository;
 import com.richflow.api.repository.user.UserRepository;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -31,6 +32,14 @@ public class UserService {
         user.setUserPassword(userRequest.getUserPassword());
         user.setUserJoinType(userRequest.getUserJoinType());
         user.setUserStatus("Y");
+        String nickname = "";
+        if(Objects.isNull(userRequest.getUserNickname())) {
+            nickname = userRequest.getUserId();
+            int idx = nickname.indexOf("@");
+            nickname = nickname.substring(0, idx);
+        } else {
+            nickname = userRequest.getUserNickname();
+        }
         user.setUserNickname(userRequest.getUserNickname());
         userRepository.save(user);
         return user;
@@ -74,7 +83,7 @@ public class UserService {
     public static UserResponse buildUserResponse(int code, Map<String, Object> data) {
         UserResponse userResponse = UserResponse.builder()
                 .code(code)
-                .message(UserCode.getMessage(code))
+                .message(UserResponseCode.getMessage(code))
                 .data(data)
                 .build();
         return userResponse;
@@ -91,7 +100,7 @@ public class UserService {
     public static UserResponse buildUserResponse(int code) {
         UserResponse userResponse = UserResponse.builder()
                 .code(code)
-                .message(UserCode.getMessage(code))
+                .message(UserResponseCode.getMessage(code))
                 .build();
         return userResponse;
     }

@@ -1,5 +1,5 @@
 package com.richflow.api.domain.user;
-public class UserCode {
+public class UserResponseCode {
     public static final int SUCCESS = 200;
     public static final int FAILURE_PASSWORD_CHK = 501;
     public static final int FAILURE_ID_CHK = 502;

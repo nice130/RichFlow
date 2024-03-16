@@ -3,7 +3,7 @@ package com.richflow.api.service.accounts;
 import com.richflow.api.common.CommonUtil;
 import com.richflow.api.domain.accounts.Accounts;
 import com.richflow.api.domain.accounts.AccountsCode;
-import com.richflow.api.domain.accounts.MoneyType;
+import com.richflow.api.domain.enumType.MoneyType;
 import com.richflow.api.repository.accounts.AccountsRepository;
 import com.richflow.api.request.user.UserRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.richflow.api.domain.accounts.MoneyType.*;
+import static com.richflow.api.domain.enumType.MoneyType.*;
 
 @Slf4j
 @Service

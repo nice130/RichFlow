@@ -1,4 +1,4 @@
-package com.richflow.api.domain.accounts;
+package com.richflow.api.domain.enumType;
 
 public enum MoneyType {
     cash,
