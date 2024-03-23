@@ -1,7 +1,7 @@
 package com.richflow.api.domain.history;
 
 import com.richflow.api.domain.enumType.ActEither;
-import com.richflow.api.domain.enumType.MoneyType;
+import com.richflow.api.domain.enumType.AcMoneyType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,7 +36,7 @@ public class History {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "history_ac_money_type")
-    private MoneyType historyAcMoneyType;
+    private AcMoneyType historyAcMoneyType;
 
     @Column(name = "history_name")
     private String historyName;

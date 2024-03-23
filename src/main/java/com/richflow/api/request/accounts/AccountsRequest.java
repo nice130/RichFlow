@@ -10,14 +10,13 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class AccountsRequest {
-    private Long acIdx;
-    private Long userIdx;
-    private Long acLevel;
-    private Long acParentLevel;
 
+    private Long userIdx;
+    private String userId;
+
+    private int acLevel;
+    private int acParentLevel;
     private String acMoneyType;
     private String acName;
     private int acSeq;
-    private Date acCreateAt;
-    private Date acUpdateAt;
 }

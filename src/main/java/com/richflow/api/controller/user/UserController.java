@@ -81,17 +81,11 @@ public class UserController {
             userRequest.setUslgUpdateIp(request.getRemoteAddr());
             userService.setUserLog(userRequest);
 
-            // 카테고리 입력
-            accountingTypesService.saveBasicCategory(userRequest);
-
-            // 회원 자산내역 입력
-            accountsService.saveBasicAccounts(userRequest);
-
             String token = tokenProvider.create(userRequest);
 
             HashMap<String, Object> data = new HashMap<>();
             data.put("token", token);
-            data.put("nickname", userRequest.getUserNickname());
+            data.put("nickname", user.getUserNickname());
 
             int code = 200; // 성공
             return UserService.buildUserResponse(code, data);
