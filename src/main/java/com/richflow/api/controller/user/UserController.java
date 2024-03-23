@@ -85,7 +85,7 @@ public class UserController {
 
             HashMap<String, Object> data = new HashMap<>();
             data.put("token", token);
-            data.put("nickname", userRequest.getUserNickname());
+            data.put("nickname", user.getUserNickname());
 
             int code = 200; // 성공
             return UserService.buildUserResponse(code, data);
