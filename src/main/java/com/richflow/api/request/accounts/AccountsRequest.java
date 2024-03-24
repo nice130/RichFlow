@@ -17,6 +17,7 @@ public class AccountsRequest {
     private int acLevel;
     private int acParentLevel;
     private String acMoneyType;
+    private Long acAmount;
     private String acName;
     private int acSeq;
 }

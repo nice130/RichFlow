@@ -34,7 +34,7 @@ public class Accounts {
     private AcMoneyType acMoneyType;
 
     @Column(name = "ac_amount")
-    private String acAmount;
+    private Long acAmount;
 
     @Column(name = "ac_name")
     private String acName;

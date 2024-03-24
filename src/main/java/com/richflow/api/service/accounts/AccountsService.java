@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.richflow.api.domain.enumType.AcMoneyType.*;
 
@@ -39,12 +40,15 @@ public class AccountsService {
         }
 
         AcMoneyType moneyType = AcMoneyType.valueOf(accountsRequest.getAcMoneyType().toUpperCase());
+        Long acAmount = accountsRequest.getAcAmount();
+        long amount = Optional.ofNullable(acAmount).orElse(0L);
 
         // 사용자 자산 목록 생성
         Accounts accounts = new Accounts();
         accounts.setUserIdx(userIdx);
         accounts.setAcLevel(Math.toIntExact(accountsRequest.getAcLevel()));
-        accounts.setAcMoneyType(valueOf(accountsRequest.getAcMoneyType()));
+        accounts.setAcMoneyType(moneyType);
+        accounts.setAcAmount(amount);
         accounts.setAcName(accountsRequest.getAcName());
         accounts.setAcSeq(accountsRequest.getAcSeq());
         accounts.setAcCreateAt(CommonUtil.getTimestamp());
