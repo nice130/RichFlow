@@ -1,55 +1,66 @@
 package com.richflow.api.domain.history;
 
+import com.richflow.api.converter.MoneyTypeConverter;
 import com.richflow.api.domain.enumType.ActEither;
 import com.richflow.api.domain.enumType.MoneyType;
+import com.richflow.api.request.history.UpdateHistoryDTO;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "t_history")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "history_idx")
     private Long historyIdx;
 
-    @Column(name = "ac_idx")
     private Long acIdx;
 
-    @Column(name = "user_idx")
     private Long userIdx;
 
-    @Column(name = "act_idx")
     private Long actIdx;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "history_act_either")
     private ActEither historyActEither;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "history_ac_money_type")
+    @Convert(converter = MoneyTypeConverter.class)
     private MoneyType historyAcMoneyType;
 
-    @Column(name = "history_name")
     private String historyName;
 
-    @Column(name = "history_amounts")
-    private String historyAmounts;
+    private BigDecimal historyAmounts;
 
-    @Column(name = "history_memo")
     private String historyMemo;
 
-    @Column(name = "history_create_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date historyCreateAt;
 
-    @Column(name = "history_update_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date historyUpdateAt;
+
+    @Builder
+    public History(ActEither historyActEither, MoneyType historyAcMoneyType,
+                   String historyName, BigDecimal historyAmounts, String historyMemo) {
+        this.historyActEither = historyActEither;
+        this.historyAcMoneyType = historyAcMoneyType;
+        this.historyName = historyName;
+        this.historyAmounts = historyAmounts;
+        this.historyMemo = historyMemo;
+        this.historyCreateAt = new Date();
+        this.historyUpdateAt = new Date();
+    }
+
+    public void updateDetails(UpdateHistoryDTO updateHistoryDTO) {
+        this.historyActEither = updateHistoryDTO.getHistoryActEither();
+        this.historyAcMoneyType = updateHistoryDTO.getHistoryAcMoneyType();
+        this.historyName = updateHistoryDTO.getHistoryName();
+        this.historyAmounts = updateHistoryDTO.getHistoryAmounts();
+        this.historyMemo = updateHistoryDTO.getHistoryMemo();
+        this.historyUpdateAt = new Date(); // Set update timestamp
+    }
 }

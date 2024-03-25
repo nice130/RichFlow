@@ -1,12 +1,12 @@
-package com.richflow.api.repository.accounts;
+package com.richflow.api.repository.history;
 
 import com.richflow.api.domain.accounts.Accounts;
 import com.richflow.api.domain.enumType.MoneyType;
+import com.richflow.api.domain.history.History;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AccountsRepository extends JpaRepository<Accounts, Long> {
+public interface HistoryRepository extends JpaRepository<History, Long> {
 
-    Boolean existsByUserIdxAndAcLevelAndAcMoneyType(Long userIdx, int acLevel, MoneyType acMoneyType);
 }

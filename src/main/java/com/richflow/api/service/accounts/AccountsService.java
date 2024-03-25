@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static com.richflow.api.domain.enumType.MoneyType.*;
 
 @Slf4j
@@ -66,7 +64,7 @@ public class AccountsService {
      * 최상위 레벨 자산 확인
      * */
     public Boolean getExistsByAccountsTopLevel(Long userIdx, MoneyType acMoneyType) {
-        return accountsRepository.ExistsByUserIdxAndAcLevelAndAcMoneyType(userIdx, acMoneyType, 1);
+        return accountsRepository.existsByUserIdxAndAcLevelAndAcMoneyType(userIdx, 1, acMoneyType);
     }
 
 }
