@@ -40,7 +40,7 @@ public class UserService {
         } else {
             nickname = userRequest.getUserNickname();
         }
-        user.setUserNickname(userRequest.getUserNickname());
+        user.setUserNickname(nickname);
         userRepository.save(user);
         return user;
     }

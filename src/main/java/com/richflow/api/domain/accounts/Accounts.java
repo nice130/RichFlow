@@ -1,6 +1,6 @@
 package com.richflow.api.domain.accounts;
 
-import com.richflow.api.domain.enumType.MoneyType;
+import com.richflow.api.domain.enumType.AcMoneyType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,7 +31,10 @@ public class Accounts {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ac_money_type")
-    private MoneyType acMoneyType;
+    private AcMoneyType acMoneyType;
+
+    @Column(name = "ac_amount")
+    private Long acAmount;
 
     @Column(name = "ac_name")
     private String acName;

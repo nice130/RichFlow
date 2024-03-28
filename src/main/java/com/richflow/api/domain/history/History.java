@@ -2,7 +2,7 @@ package com.richflow.api.domain.history;
 
 import com.richflow.api.converter.MoneyTypeConverter;
 import com.richflow.api.domain.enumType.ActEither;
-import com.richflow.api.domain.enumType.MoneyType;
+import com.richflow.api.domain.enumType.AcMoneyType;
 import com.richflow.api.request.history.UpdateHistoryDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,8 +28,10 @@ public class History {
     @Enumerated(EnumType.STRING)
     private ActEither historyActEither;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "history_ac_money_type")
     @Convert(converter = MoneyTypeConverter.class)
-    private MoneyType historyAcMoneyType;
+    private AcMoneyType historyAcMoneyType;
 
     private String historyName;
 

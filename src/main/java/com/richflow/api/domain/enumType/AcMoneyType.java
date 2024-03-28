@@ -1,6 +1,6 @@
 package com.richflow.api.domain.enumType;
 
-public enum MoneyType {
+public enum AcMoneyType {
     CASH,
     BANK,
     CREDIT
