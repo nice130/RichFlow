@@ -35,7 +35,7 @@ public class History {
 
     private String historyName;
 
-    private BigDecimal historyAmounts;
+//    private BigDecimal historyAmounts;
 
     private String historyMemo;
 
@@ -46,12 +46,12 @@ public class History {
     private Date historyUpdateAt;
 
     @Builder
-    public History(ActEither historyActEither, MoneyType historyAcMoneyType,
+    public History(ActEither historyActEither, AcMoneyType historyAcMoneyType,
                    String historyName, BigDecimal historyAmounts, String historyMemo) {
         this.historyActEither = historyActEither;
         this.historyAcMoneyType = historyAcMoneyType;
         this.historyName = historyName;
-        this.historyAmounts = historyAmounts;
+//        this.historyAmounts = historyAmounts;
         this.historyMemo = historyMemo;
         this.historyCreateAt = new Date();
         this.historyUpdateAt = new Date();
@@ -61,7 +61,7 @@ public class History {
         this.historyActEither = updateHistoryDTO.getHistoryActEither();
         this.historyAcMoneyType = updateHistoryDTO.getHistoryAcMoneyType();
         this.historyName = updateHistoryDTO.getHistoryName();
-        this.historyAmounts = updateHistoryDTO.getHistoryAmounts();
+//        this.historyAmounts = updateHistoryDTO.getHistoryAmounts();
         this.historyMemo = updateHistoryDTO.getHistoryMemo();
         this.historyUpdateAt = new Date(); // Set update timestamp
     }
