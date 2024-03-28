@@ -1,6 +1,6 @@
 package com.richflow.api.service.history;
 
-import com.richflow.api.domain.enumType.MoneyType;
+import com.richflow.api.domain.enumType.AcMoneyType;
 import com.richflow.api.domain.history.History;
 import com.richflow.api.repository.history.HistoryRepository;
 import com.richflow.api.request.history.CreateHistoryDTO;
@@ -19,7 +19,7 @@ public class HistoryService {
         History createHistory =  History.builder()
                 .historyActEither(createHistoryDTO.getHistoryActEither())
 //                .historyAcMoneyType(createHistoryDTO.getHistoryAcMoneyType())
-                .historyAcMoneyType(MoneyType.CASH)
+                .historyAcMoneyType(AcMoneyType.CASH)
                 .historyName(createHistoryDTO.getHistoryName())
                 .historyAmounts(createHistoryDTO.getHistoryAmounts())
                 .historyMemo(createHistoryDTO.getHistoryMemo())

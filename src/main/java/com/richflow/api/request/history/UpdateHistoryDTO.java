@@ -1,7 +1,7 @@
 package com.richflow.api.request.history;
 
 import com.richflow.api.domain.enumType.ActEither;
-import com.richflow.api.domain.enumType.MoneyType;
+import com.richflow.api.domain.enumType.AcMoneyType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,7 @@ public class UpdateHistoryDTO {
 
     private Long historyIdx;
     private ActEither historyActEither;
-    private MoneyType historyAcMoneyType;
+    private AcMoneyType historyAcMoneyType;
     private String historyName;
     private BigDecimal historyAmounts;
     private String historyMemo;
