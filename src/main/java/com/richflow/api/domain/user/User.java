@@ -1,5 +1,6 @@
 package com.richflow.api.domain.user;
 
+import com.richflow.api.domain.accounts.Accounts;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter @Setter
 @Entity
@@ -39,4 +41,7 @@ public class User {
 
     @Column(name = "user_create_at")
     private Date userCreateAt;
+
+    @OneToMany
+    private List<Accounts> accounts;
 }

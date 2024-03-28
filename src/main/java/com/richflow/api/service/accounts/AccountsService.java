@@ -3,9 +3,11 @@ package com.richflow.api.service.accounts;
 import com.richflow.api.common.CommonUtil;
 import com.richflow.api.domain.accounts.Accounts;
 import com.richflow.api.domain.accounts.AccountsCode;
+import com.richflow.api.domain.accounts.AccountsResponseCode;
 import com.richflow.api.domain.enumType.AcMoneyType;
 import com.richflow.api.repository.accounts.AccountsRepository;
 import com.richflow.api.request.accounts.AccountsRequest;
+import com.richflow.api.response.accounts.AccountsResponse;
 import com.richflow.api.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.richflow.api.domain.enumType.AcMoneyType.*;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,12 @@ public class AccountsService {
 
     private final AccountsRepository accountsRepository;
     private final UserService userService;
+
+    public List<Accounts> getAccountsList(String userId) {
+        Long userIdx = userService.getUserIdxByUserId(userId);
+        log.info(String.valueOf(userIdx));
+        return accountsRepository.getAccountsByUserIdx(userIdx);
+    }
 
     /*
     * 자산 등록
@@ -59,8 +65,6 @@ public class AccountsService {
     * 최상위 레벨 자산 목록 생성
     * */
     public void makeBasicAccounts(Long userIdx, AcMoneyType moneyType) {
-        log.info(String.valueOf(userIdx));
-        log.info(String.valueOf(moneyType));
         Accounts accounts = new Accounts();
         accounts.setUserIdx(userIdx);
         accounts.setAcLevel(1);
@@ -75,6 +79,20 @@ public class AccountsService {
      * */
     public boolean getExistsByBasicAccounts(Long userIdx) {
         return accountsRepository.existsByUserIdx(userIdx);
+    }
+
+    public static AccountsResponse buildAccountsResponse(int code) {
+        return AccountsResponse.builder()
+                .code(code)
+                .message(AccountsResponseCode.getMessage(code))
+                .build();
+    }
+
+    public static AccountsResponse buildAccountsResponse(int code, String error) {
+        return AccountsResponse.builder()
+                .code(code)
+                .message(error)
+                .build();
     }
 
 }
