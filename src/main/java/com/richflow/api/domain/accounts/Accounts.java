@@ -26,8 +26,8 @@ public class Accounts {
     @Column(name = "ac_level")
     private int acLevel;
 
-    @Column(name = "ac_parent_level")
-    private int acParentLevel;
+    @Column(name = "ac_parent_idx")
+    private Long acParentIdx;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ac_money_type")

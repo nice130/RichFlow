@@ -33,8 +33,7 @@ public class UserController {
             String userId = userRequest.getUserId();
             // 아이디 확인
             if (!userService.getExistsByUserId(userId)) {
-                int code = 504; // 아이디가 없습니다.
-                return UserService.buildUserResponse(code);
+                return UserService.buildUserResponse(504); // 아이디가 없습니다.
             }
             // 아이디, 비밀번호 검증
             if (userService.getByCredentials(userId, userRequest.getUserPassword())) {
@@ -47,16 +46,13 @@ public class UserController {
                 data.put("token", token);
                 data.put("nickname", userService.getUserNicknameByUserId(userId));
 
-                int code = 200; // 성공
-                return UserService.buildUserResponse(code, data);
+                return UserService.buildUserResponse(200, data);
             } else {
-                int code = 501; // 비밀번호를 확인하세요
-                return UserService.buildUserResponse(code);
+                return UserService.buildUserResponse(501); // 비밀번호를 확인하세요
             }
         } catch (Exception e) {
             log.info(String.valueOf(e));
-            int code = 600;
-            return UserService.buildUserResponse(code, String.valueOf(e));
+            return UserService.buildUserResponse(600, String.valueOf(e));
         }
     }
 
@@ -70,8 +66,7 @@ public class UserController {
         try {
             String userId = userRequest.getUserId();
             if(userService.getExistsByUserId(userId)) {
-                int code = 503; // 이미 존재하는 아이디입니다.
-                return UserService.buildUserResponse(code);
+                return UserService.buildUserResponse(503); // 이미 존재하는 아이디입니다.
             }
             // 회원 생성
             User user = userService.createUser(userRequest);
@@ -87,12 +82,10 @@ public class UserController {
             data.put("token", token);
             data.put("nickname", user.getUserNickname());
 
-            int code = 200; // 성공
-            return UserService.buildUserResponse(code, data);
+            return UserService.buildUserResponse(200, data);
         } catch (Exception e) {
             log.info(String.valueOf(e));
-            int code = 600;
-            return UserService.buildUserResponse(code, String.valueOf(e));
+            return UserService.buildUserResponse(600, String.valueOf(e));
         }
     }
 

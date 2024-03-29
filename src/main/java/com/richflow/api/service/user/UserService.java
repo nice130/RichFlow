@@ -41,6 +41,7 @@ public class UserService {
             nickname = userRequest.getUserNickname();
         }
         user.setUserNickname(nickname);
+        user.setUserCreateAt(CommonUtil.getTimestamp());
         userRepository.save(user);
         return user;
     }

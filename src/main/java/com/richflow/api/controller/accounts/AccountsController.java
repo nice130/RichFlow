@@ -33,15 +33,30 @@ public class AccountsController {
             accountsService.createAccounts(accountsRequest);
             return AccountsService.buildAccountsResponse(200);
         } catch (Exception e) {
-            return AccountsService.buildAccountsResponse(501, String.valueOf(e));
+            return AccountsService.buildAccountsResponse(600, String.valueOf(e));
         }
     }
 
-    @PatchMapping("/{index}")
-    public void updateAccounts() {
+    @PatchMapping("/{acIdx}")
+    public AccountsResponse updateAccounts(@PathVariable Long acIdx, @RequestBody AccountsRequest accountsRequest) {
+        try {
+            if(accountsService.updateAccounts(acIdx, accountsRequest)) {
+                return AccountsService.buildAccountsResponse(200);
+            } else {
+                return AccountsService.buildAccountsResponse(501);
+            }
+        } catch (Exception e) {
+            return AccountsService.buildAccountsResponse(600, String.valueOf(e));
+        }
     }
 
-    @DeleteMapping("/{index}")
-    public void deleteAccounts() {
+    @DeleteMapping("/{acIdx}")
+    public AccountsResponse deleteAccounts(@PathVariable Long acIdx, @RequestBody AccountsRequest accountsRequest) {
+        try {
+            accountsService.deleteAccounts(acIdx, accountsRequest);
+            return AccountsService.buildAccountsResponse(200);
+        } catch (Exception e) {
+            return AccountsService.buildAccountsResponse(600, String.valueOf(e));
+        }
     }
 }
