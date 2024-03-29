@@ -5,6 +5,7 @@ public class AccountsResponseCode {
     public static final int FAIL = 501;
     public static final int CANTCHANGEACCOUNT = 502;
     public static final int FAILVALIDATIONCHK = 503;
+    public static final int LOWLEVELERROR = 504;
 
     public static String getMessage(int code) {
         switch (code) {
@@ -16,6 +17,8 @@ public class AccountsResponseCode {
                 return "변경할 수 없는 카테고리입니다.";
             case FAILVALIDATIONCHK:
                 return "권한이 없습니다.";
+            case LOWLEVELERROR:
+                return "하위 자산을 먼저 삭제해주세요.";
             default:
                 return "알 수 없는 에러. 관리자에게 문의하세요";
         }

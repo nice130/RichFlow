@@ -37,23 +37,26 @@ public class AccountsController {
         }
     }
 
-    @PatchMapping("/{index}")
-    public AccountsResponse updateAccounts(@PathVariable Long index, @RequestBody AccountsRequest accountsRequest) {
+    @PatchMapping("/{acIdx}")
+    public AccountsResponse updateAccounts(@PathVariable Long acIdx, @RequestBody AccountsRequest accountsRequest) {
         try {
-            if(accountsRequest.getAcLevel() == 1) {
-                return AccountsService.buildAccountsResponse(502); // 변경할 수 없는 카테고리입니다.
-            }
-            if(accountsService.updateAccounts(index, accountsRequest) == 200) {
+            if(accountsService.updateAccounts(acIdx, accountsRequest)) {
                 return AccountsService.buildAccountsResponse(200);
             } else {
-                return AccountsService.buildAccountsResponse(503); // 권한이 없습니다.
+                return AccountsService.buildAccountsResponse(501);
             }
         } catch (Exception e) {
             return AccountsService.buildAccountsResponse(600, String.valueOf(e));
         }
     }
 
-    @DeleteMapping("/{index}")
-    public void deleteAccounts(@PathVariable Long index) {
+    @DeleteMapping("/{acIdx}")
+    public AccountsResponse deleteAccounts(@PathVariable Long acIdx, @RequestBody AccountsRequest accountsRequest) {
+        try {
+            accountsService.deleteAccounts(acIdx, accountsRequest);
+            return AccountsService.buildAccountsResponse(200);
+        } catch (Exception e) {
+            return AccountsService.buildAccountsResponse(600, String.valueOf(e));
+        }
     }
 }

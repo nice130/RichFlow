@@ -13,7 +13,7 @@ CREATE TABLE public.t_accounts (
 	ac_idx int8 DEFAULT nextval('t_accounts_seq'::regclass) NOT NULL,
 	user_idx int8 NOT NULL,
 	ac_level int4 NOT NULL,
-	ac_parent_level int4 NOT NULL,
+	ac_parent_idx int8 NULL,
 	ac_money_type varchar(10) NULL,
 	ac_amount int8 DEFAULT 0 NOT NULL,
 	ac_name varchar(50) NULL,
