@@ -33,15 +33,27 @@ public class AccountsController {
             accountsService.createAccounts(accountsRequest);
             return AccountsService.buildAccountsResponse(200);
         } catch (Exception e) {
-            return AccountsService.buildAccountsResponse(501, String.valueOf(e));
+            return AccountsService.buildAccountsResponse(600, String.valueOf(e));
         }
     }
 
     @PatchMapping("/{index}")
-    public void updateAccounts() {
+    public AccountsResponse updateAccounts(@PathVariable Long index, @RequestBody AccountsRequest accountsRequest) {
+        try {
+            if(accountsRequest.getAcLevel() == 1) {
+                return AccountsService.buildAccountsResponse(502); // 변경할 수 없는 카테고리입니다.
+            }
+            if(accountsService.updateAccounts(index, accountsRequest) == 200) {
+                return AccountsService.buildAccountsResponse(200);
+            } else {
+                return AccountsService.buildAccountsResponse(503); // 권한이 없습니다.
+            }
+        } catch (Exception e) {
+            return AccountsService.buildAccountsResponse(600, String.valueOf(e));
+        }
     }
 
     @DeleteMapping("/{index}")
-    public void deleteAccounts() {
+    public void deleteAccounts(@PathVariable Long index) {
     }
 }
