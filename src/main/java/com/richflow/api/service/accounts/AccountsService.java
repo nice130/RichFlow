@@ -47,30 +47,32 @@ public class AccountsService {
 
         AcMoneyType moneyType = AcMoneyType.valueOf(accountsRequest.getAcMoneyType().toUpperCase());
         Long acAmount = accountsRequest.getAcAmount();
-        long amount = Optional.ofNullable(acAmount).orElse(0L);
 
         // 사용자 자산 목록 생성
-        Accounts accounts = new Accounts();
-        accounts.setUserIdx(userIdx);
+        Accounts accounts = setCommonAccounts(userIdx, moneyType, acAmount);
         accounts.setAcLevel(Math.toIntExact(accountsRequest.getAcLevel()));
-        accounts.setAcMoneyType(moneyType);
-        accounts.setAcAmount(amount);
         accounts.setAcName(accountsRequest.getAcName());
         accounts.setAcSeq(accountsRequest.getAcSeq());
-        accounts.setAcCreateAt(CommonUtil.getTimestamp());
         accountsRepository.save(accounts);
+    }
+
+    public static Accounts setCommonAccounts(Long userIdx, AcMoneyType moneyType, Long acAmount) {
+        long amount = Optional.ofNullable(acAmount).orElse(0L);
+        Accounts accounts = new Accounts();
+        accounts.setUserIdx(userIdx);
+        accounts.setAcMoneyType(moneyType);
+        accounts.setAcAmount(amount);
+        accounts.setAcCreateAt(CommonUtil.getTimestamp());
+        return accounts;
     }
 
     /* 
     * 최상위 레벨 자산 목록 생성
     * */
     public void makeBasicAccounts(Long userIdx, AcMoneyType moneyType) {
-        Accounts accounts = new Accounts();
-        accounts.setUserIdx(userIdx);
+        Accounts accounts = setCommonAccounts(userIdx, moneyType, 0L);
         accounts.setAcLevel(1);
-        accounts.setAcMoneyType(moneyType);
         accounts.setAcName(AccountsCode.get(String.valueOf(moneyType)));
-        accounts.setAcCreateAt(CommonUtil.getTimestamp());
         accountsRepository.save(accounts);
     }
 
@@ -79,6 +81,28 @@ public class AccountsService {
      * */
     public boolean getExistsByBasicAccounts(Long userIdx) {
         return accountsRepository.existsByUserIdx(userIdx);
+    }
+
+    public int updateAccounts(Long index, AccountsRequest accountsRequest) {
+        return accountsRepository.findByAcIdx(index)
+                .map(origin -> {
+                    if(!userValidation(origin.getUserIdx(), accountsRequest.getUserId())) {
+                        return 503;
+                    }
+                    origin.setAcName(accountsRequest.getAcName());
+                    origin.setAcMoneyType(AcMoneyType.valueOf(accountsRequest.getAcMoneyType().toUpperCase()));
+                    origin.setAcSeq(accountsRequest.getAcSeq());
+                    origin.setAcAmount(accountsRequest.getAcAmount());
+                    origin.setAcUpdateAt(CommonUtil.getTimestamp());
+                    accountsRepository.save(origin);
+                    return 200;
+                })
+                .orElse(501);
+    }
+
+    public boolean userValidation(Long userIdx, String userId) {
+        Long reqUserIdx = userService.getUserIdxByUserId(userId);
+        return userIdx.equals(reqUserIdx);
     }
 
     public static AccountsResponse buildAccountsResponse(int code) {

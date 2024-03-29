@@ -14,6 +14,7 @@ public class AccountsRequest {
     private Long userIdx;
     private String userId;
 
+    private Long acIdx;
     private int acLevel;
     private int acParentLevel;
     private String acMoneyType;
