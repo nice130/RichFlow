@@ -21,10 +21,10 @@ public class User {
     @Column(name = "user_idx")
     private Long userIdx;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
-    @Column(name = "user_password")
+    @Column(name = "user_password", nullable = false)
     private String userPassword;
 
     @Column(name = "user_join_type")
