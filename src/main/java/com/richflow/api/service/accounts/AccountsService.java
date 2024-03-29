@@ -26,7 +26,6 @@ public class AccountsService {
 
     public List<Accounts> getAccountsList(String userId) {
         Long userIdx = userService.getUserIdxByUserId(userId);
-        log.info(String.valueOf(userIdx));
         return accountsRepository.getAccountsByUserIdx(userIdx);
     }
 
@@ -48,9 +47,18 @@ public class AccountsService {
         AcMoneyType moneyType = AcMoneyType.valueOf(accountsRequest.getAcMoneyType().toUpperCase());
         Long acAmount = accountsRequest.getAcAmount();
 
+        Long parentIdx;
+        if(accountsRequest.getAcLevel() > 2) {
+            parentIdx = accountsRequest.getAcParentIdx();
+        } else {
+            Optional<Accounts> accounts = accountsRepository.findByAcMoneyTypeAndAcLevel(moneyType, 1);
+            parentIdx = accounts.get().getAcIdx();
+        }
+
         // 사용자 자산 목록 생성
         Accounts accounts = setCommonAccounts(userIdx, moneyType, acAmount);
         accounts.setAcLevel(Math.toIntExact(accountsRequest.getAcLevel()));
+        accounts.setAcParentIdx(parentIdx);
         accounts.setAcName(accountsRequest.getAcName());
         accounts.setAcSeq(accountsRequest.getAcSeq());
         accountsRepository.save(accounts);
@@ -83,26 +91,48 @@ public class AccountsService {
         return accountsRepository.existsByUserIdx(userIdx);
     }
 
-    public int updateAccounts(Long index, AccountsRequest accountsRequest) {
-        return accountsRepository.findByAcIdx(index)
+    public boolean updateAccounts(Long acIdx, AccountsRequest accountsRequest) {
+        return accountsRepository.findByAcIdx(acIdx)
                 .map(origin -> {
-                    if(!userValidation(origin.getUserIdx(), accountsRequest.getUserId())) {
-                        return 503;
-                    }
+                    userValidation(origin.getUserIdx(), accountsRequest.getUserId());
+                    levelValidation(acIdx, "update");
                     origin.setAcName(accountsRequest.getAcName());
                     origin.setAcMoneyType(AcMoneyType.valueOf(accountsRequest.getAcMoneyType().toUpperCase()));
+                    origin.setAcLevel(accountsRequest.getAcLevel());
+                    origin.setAcParentIdx(accountsRequest.getAcParentIdx());
                     origin.setAcSeq(accountsRequest.getAcSeq());
                     origin.setAcAmount(accountsRequest.getAcAmount());
                     origin.setAcUpdateAt(CommonUtil.getTimestamp());
                     accountsRepository.save(origin);
-                    return 200;
+                    return true;
                 })
-                .orElse(501);
+                .orElse(false);
     }
 
-    public boolean userValidation(Long userIdx, String userId) {
-        Long reqUserIdx = userService.getUserIdxByUserId(userId);
-        return userIdx.equals(reqUserIdx);
+    public void deleteAccounts(Long acIdx, AccountsRequest accountsRequest) {
+        Optional<Accounts> accounts = accountsRepository.findByAcIdx(acIdx);
+        userValidation(accounts.get().getUserIdx(), accountsRequest.getUserId());
+        levelValidation(acIdx, "delete");
+        accountsRepository.deleteByAcIdx(acIdx);
+    }
+
+    public void userValidation(Long userIdx, String userId) {
+        if(!userIdx.equals(userService.getUserIdxByUserId(userId))) {
+            throw new RuntimeException("권한이 없습니다.");
+        }
+    }
+
+    public void levelValidation(Long acIdx, String type) {
+        Optional<Accounts> accounts = accountsRepository.findByAcIdx(acIdx);
+        int reqLevel = accounts.get().getAcLevel();
+        if(reqLevel == 1) {
+            throw new RuntimeException("수정/삭제 불가");
+        }
+        if(type.equals("delete")) {
+            if(accountsRepository.existsByAcParentIdx(acIdx)) {
+                throw new RuntimeException("하위 자산을 먼저 삭제해주세요.");
+            }
+        }
     }
 
     public static AccountsResponse buildAccountsResponse(int code) {
