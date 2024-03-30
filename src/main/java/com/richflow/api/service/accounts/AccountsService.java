@@ -62,6 +62,10 @@ public class AccountsService {
         accounts.setAcName(accountsRequest.getAcName());
         accounts.setAcSeq(accountsRequest.getAcSeq());
         accountsRepository.save(accounts);
+
+        // 상위 레벨 자산 업데이트
+        Optional<Accounts> pAccounts = accountsRepository.findByAcIdx(parentIdx);
+        updateParentAcAmounts(pAccounts.get().getAcIdx(), 0L, acAmount);
     }
 
     public static Accounts setCommonAccounts(Long userIdx, AcMoneyType moneyType, Long acAmount) {
@@ -96,6 +100,9 @@ public class AccountsService {
                 .map(origin -> {
                     userValidation(origin.getUserIdx(), accountsRequest.getUserId());
                     levelValidation(acIdx, "update");
+
+                    Long oriAmt = origin.getAcAmount();
+
                     origin.setAcName(accountsRequest.getAcName());
                     origin.setAcMoneyType(AcMoneyType.valueOf(accountsRequest.getAcMoneyType().toUpperCase()));
                     origin.setAcLevel(accountsRequest.getAcLevel());
@@ -104,9 +111,29 @@ public class AccountsService {
                     origin.setAcAmount(accountsRequest.getAcAmount());
                     origin.setAcUpdateAt(CommonUtil.getTimestamp());
                     accountsRepository.save(origin);
+
+                    updateParentAcAmounts(accountsRequest.getAcParentIdx(), oriAmt, accountsRequest.getAcAmount());
                     return true;
                 })
                 .orElse(false);
+    }
+
+    /*
+        상위레벨 ~ 최상위레벨까지 기존 자산, 입력 자산 차액만큼 update
+    */
+    public void updateParentAcAmounts(Long prtAcIdx, Long oriAmt, Long reqAmt) {
+        Long updateAmt = reqAmt - oriAmt;
+        accountsRepository.findByAcIdx(prtAcIdx)
+                .map(origin -> {
+                    Long prtOriAmt = origin.getAcAmount();
+                    origin.setAcAmount(prtOriAmt + updateAmt);
+                    accountsRepository.save(origin);
+
+                    if(origin.getAcLevel() > 1) {
+                        updateParentAcAmounts(origin.getAcParentIdx(), prtOriAmt, origin.getAcAmount());
+                    }
+                    return true;
+                });
     }
 
     public void deleteAccounts(Long acIdx, AccountsRequest accountsRequest) {
