@@ -2,10 +2,7 @@ package com.richflow.api.domain.accountingTypes;
 
 import com.richflow.api.domain.enumType.ActEither;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -36,9 +33,25 @@ public class AccountingTypes {
     @Column(name = "act_seq")
     private int actSeq;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "act_create_at")
     private Date actCreateAt;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "act_update_at")
     private Date actUpdateAt;
+
+    /*
+        카테고리 생성 빌더
+        첫 생성시 업데이트일자 생성일자로 넣어줌
+        분류키(기본인덱스),회원인덱스,부모인덱스,수입/지출 순번 추가예정
+    */
+    @Builder
+    public  AccountingTypes(ActEither actEither, String actCtgName){
+        this.actEither = actEither;
+        this.actCtgName = actCtgName;
+        this.actCreateAt = new Date();
+        this.actUpdateAt = new Date();
+    }
+
 }
