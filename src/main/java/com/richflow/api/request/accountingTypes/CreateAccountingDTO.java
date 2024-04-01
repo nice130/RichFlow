@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AccountingTypesRequest {
+public class CreateAccountingDTO {
     private Long actIdx;
     private Long userIdx;
     private Long actParentIdx;

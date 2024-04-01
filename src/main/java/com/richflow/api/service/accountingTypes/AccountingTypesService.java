@@ -3,7 +3,9 @@ package com.richflow.api.service.accountingTypes;
 import com.richflow.api.common.CommonUtil;
 import com.richflow.api.domain.accountingTypes.AccountingTypes;
 import com.richflow.api.domain.accountingTypes.AccountingTypesCode;
+import com.richflow.api.domain.enumType.ActEither;
 import com.richflow.api.repository.accountingTypes.AccountingTypesRepository;
+import com.richflow.api.request.accountingTypes.CreateAccountingDTO;
 import com.richflow.api.request.user.UserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,5 +54,13 @@ public class AccountingTypesService {
             accountingTypesRepository.save(accountingTypes);
             seq++;
         }
+    }
+
+    public AccountingTypes createCategory(CreateAccountingDTO createAccountingDTO) {
+        AccountingTypes accountingTypes = AccountingTypes.builder()
+                .actEither(ActEither.valueOf(createAccountingDTO.getActEither()))
+                .actCtgName(createAccountingDTO.getActCtgName())
+                .build();
+        return accountingTypesRepository.save(accountingTypes);
     }
 }
