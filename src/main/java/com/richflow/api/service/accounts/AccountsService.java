@@ -24,8 +24,7 @@ public class AccountsService {
     private final AccountsRepository accountsRepository;
     private final UserService userService;
 
-    public List<Accounts> getAccountsList(String userId) {
-        Long userIdx = userService.getUserIdxByUserId(userId);
+    public List<Accounts> getAccountsList(Long userIdx) {
         return accountsRepository.getAccountsByUserIdx(userIdx);
     }
 
@@ -33,7 +32,7 @@ public class AccountsService {
     * 자산 등록
     * */
     public void createAccounts(AccountsRequest accountsRequest) {
-        Long userIdx = userService.getUserIdxByUserId(accountsRequest.getUserId());
+        Long userIdx = accountsRequest.getUserIdx();
         accountsRequest.setUserIdx(userIdx);
 
         // 사용자 입력 자산 최상위 레벨 확인 및 생성
@@ -98,7 +97,7 @@ public class AccountsService {
     public boolean updateAccounts(Long acIdx, AccountsRequest accountsRequest) {
         return accountsRepository.findByAcIdx(acIdx)
                 .map(origin -> {
-                    userValidation(origin.getUserIdx(), accountsRequest.getUserId());
+                    userValidation(origin.getUserIdx(), accountsRequest.getUserIdx());
                     levelValidation(acIdx, "update");
 
                     Long oriAmt = origin.getAcAmount();
@@ -138,13 +137,13 @@ public class AccountsService {
 
     public void deleteAccounts(Long acIdx, AccountsRequest accountsRequest) {
         Optional<Accounts> accounts = accountsRepository.findByAcIdx(acIdx);
-        userValidation(accounts.get().getUserIdx(), accountsRequest.getUserId());
+        userValidation(accounts.get().getUserIdx(), accountsRequest.getUserIdx());
         levelValidation(acIdx, "delete");
         accountsRepository.deleteByAcIdx(acIdx);
     }
 
-    public void userValidation(Long userIdx, String userId) {
-        if(!userIdx.equals(userService.getUserIdxByUserId(userId))) {
+    public void userValidation(Long userIdx, Long reqUserIdx) {
+        if(!userIdx.equals(reqUserIdx)) {
             throw new RuntimeException("권한이 없습니다.");
         }
     }

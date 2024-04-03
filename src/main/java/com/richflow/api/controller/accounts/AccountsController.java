@@ -18,10 +18,10 @@ public class AccountsController {
 
     private final AccountsService accountsService;
 
-    @GetMapping("/{userId}")
-    public List<Accounts> getAccounts(@PathVariable String userId) throws Exception {
+    @GetMapping("/{userIdx}")
+    public List<Accounts> getAccounts(@PathVariable Long userIdx) throws Exception {
         try {
-            return accountsService.getAccountsList(userId);
+            return accountsService.getAccountsList(userIdx);
         } catch (Exception e) {
             throw new Exception(e);
         }
@@ -56,7 +56,8 @@ public class AccountsController {
             accountsService.deleteAccounts(acIdx, accountsRequest);
             return AccountsService.buildAccountsResponse(200);
         } catch (Exception e) {
-            return AccountsService.buildAccountsResponse(600, String.valueOf(e));
+            log.info(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }
