@@ -1,5 +1,6 @@
 package com.richflow.api.domain.accountingTypes;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.richflow.api.domain.enumType.ActEither;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,9 +48,10 @@ public class AccountingTypes {
         분류키(기본인덱스),회원인덱스,부모인덱스,수입/지출 순번 추가예정
     */
     @Builder
-    public  AccountingTypes(ActEither actEither, String actCtgName){
+    public  AccountingTypes(ActEither actEither, String actCtgName, int actSeq){
         this.actEither = actEither;
         this.actCtgName = actCtgName;
+        this.actSeq = actSeq;
         this.actCreateAt = new Date();
         this.actUpdateAt = new Date();
     }
