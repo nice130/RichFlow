@@ -18,4 +18,18 @@ public class CreateAccountingDTO {
     private int actSeq;
     private Date actCreateAt;
     private Date actUpdateAt;
+
+    @Override
+    public String toString() {
+        return "CreateAccountingDTO{" +
+                "actIdx=" + actIdx +
+                ", userIdx=" + userIdx +
+                ", actParentIdx=" + actParentIdx +
+                ", actEither='" + actEither + '\'' +
+                ", actCtgName='" + actCtgName + '\'' +
+                ", actSeq=" + actSeq +
+                ", actCreateAt=" + actCreateAt +
+                ", actUpdateAt=" + actUpdateAt +
+                '}';
+    }
 }
