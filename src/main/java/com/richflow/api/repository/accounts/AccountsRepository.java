@@ -14,8 +14,6 @@ import java.util.Optional;
 public interface AccountsRepository extends JpaRepository<Accounts, Long> {
     List<Accounts> getAccountsByUserIdx(Long userIdx);
     boolean existsByUserIdx(Long userIdx);
-    Optional<Accounts> findByAcIdx(Long acIdx);
     Optional<Accounts> findByAcMoneyTypeAndAcLevel(AcMoneyType moneyType, int i);
     boolean existsByAcParentIdx(Long acIdx);
-    void deleteByAcIdx(Long acIdx);
 }

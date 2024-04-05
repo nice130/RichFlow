@@ -1,23 +1,15 @@
 package com.richflow.api.request.accounts;
 
+import com.richflow.api.domain.enumType.AcMoneyType;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
-@Getter
-@Setter
-@NoArgsConstructor
-public class AccountsRequest {
-
-    private Long userIdx;
-    private String userId;
-
+@Getter @Setter
+public class UpdateAccountsDTO {
     private Long acIdx;
     private int acLevel;
     private Long acParentIdx;
-    private String acMoneyType;
+    private AcMoneyType acMoneyType;
     private Long acAmount;
     private String acName;
     private int acSeq;
