@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface AccountingTypesRepository extends JpaRepository<AccountingTypes, String>{
-    Optional<Object> findByCategoryIdxAndUserIdx(Long actidx, Long useridx);
+    Optional<Object> findByActIdxAndUserIdx(Long actidx, Long useridx);
 }

@@ -36,16 +36,18 @@ public class AccountingTypesService {
 
     //업데이트시 수입/지출분류키가 해당 유저의 것인지 확인 후 맞으면 업데이트 처리
     public AccountingTypes updateCategory(UpdateAccountingDTO updateDTO) {
+        log.info("AccountingTypes update value =>"+updateDTO.toString());
         AccountingTypes checkCategory =
                 (AccountingTypes) accountingTypesRepository
-                .findByCategoryIdxAndUserIdx(updateDTO.getActidx(),updateDTO.getUseridx())
+                .findByActIdxAndUserIdx(updateDTO.getActidx(),updateDTO.getUseridx())
                 .orElseThrow(() -> new EntityNotFoundException("해당 내역이 존재하지 않습니다."));
         System.out.println("성공");
-        return null;
+        checkCategory.updateCategory(updateDTO);
+        return accountingTypesRepository.save(checkCategory);
     }
 
 
-    public void saveBasicCategory(UserRequest userRequest) {
+    /*public void saveBasicCategory(UserRequest userRequest) {
         this.saveBasicIncomeCategory(userRequest);
         this.saveBasicExpensesCategory(userRequest);
     }
@@ -78,5 +80,5 @@ public class AccountingTypesService {
             accountingTypesRepository.save(accountingTypes);
             seq++;
         }
-    }
+    }*/
 }
