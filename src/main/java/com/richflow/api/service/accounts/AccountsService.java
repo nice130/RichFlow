@@ -1,14 +1,14 @@
 package com.richflow.api.service.accounts;
 
-import com.richflow.api.common.CommonUtil;
 import com.richflow.api.domain.accounts.Accounts;
 import com.richflow.api.domain.accounts.AccountsCode;
 import com.richflow.api.domain.accounts.AccountsResponseCode;
 import com.richflow.api.domain.enumType.AcMoneyType;
 import com.richflow.api.repository.accounts.AccountsRepository;
-import com.richflow.api.request.accounts.AccountsRequest;
+import com.richflow.api.request.accounts.CreateAccountsDTO;
+import com.richflow.api.request.accounts.UpdateAccountsDTO;
 import com.richflow.api.response.accounts.AccountsResponse;
-import com.richflow.api.service.user.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,6 @@ import java.util.Optional;
 public class AccountsService {
 
     private final AccountsRepository accountsRepository;
-    private final UserService userService;
 
     public List<Accounts> getAccountsList(Long userIdx) {
         return accountsRepository.getAccountsByUserIdx(userIdx);
@@ -31,126 +30,118 @@ public class AccountsService {
     /*
     * 자산 등록
     * */
-    public void createAccounts(AccountsRequest accountsRequest) {
-        Long userIdx = accountsRequest.getUserIdx();
-        accountsRequest.setUserIdx(userIdx);
+    public void createAccounts(CreateAccountsDTO createAccountsDTO) {
+        Long userIdx = createAccountsDTO.getUserIdx();
 
         // 사용자 입력 자산 최상위 레벨 확인 및 생성
-        if (!getExistsByBasicAccounts(userIdx)) {
+        if (!isExistsByBasicAccounts(userIdx)) {
             List<AcMoneyType> moneyTypes = List.of(AcMoneyType.values());
             for (AcMoneyType m : moneyTypes) {
                 this.makeBasicAccounts(userIdx, m);
             }
         }
 
-        AcMoneyType moneyType = AcMoneyType.valueOf(accountsRequest.getAcMoneyType().toUpperCase());
-        Long acAmount = accountsRequest.getAcAmount();
-
         Long parentIdx;
-        if(accountsRequest.getAcLevel() > 2) {
-            parentIdx = accountsRequest.getAcParentIdx();
+        if(createAccountsDTO.getAcLevel() > 2) {
+            // 최하위 레벨(3)은 front에서 넘겨준 acParentIdx 사용
+            parentIdx = createAccountsDTO.getAcParentIdx();
         } else {
-            Optional<Accounts> accounts = accountsRepository.findByAcMoneyTypeAndAcLevel(moneyType, 1);
+            // 상위 레벨(2)은 moneyType, level로 최상위(1) idx 찾기
+            Optional<Accounts> accounts = accountsRepository.findByAcMoneyTypeAndAcLevel(createAccountsDTO.getAcMoneyType(), 1);
             parentIdx = accounts.get().getAcIdx();
         }
 
         // 사용자 자산 목록 생성
-        Accounts accounts = setCommonAccounts(userIdx, moneyType, acAmount);
-        accounts.setAcLevel(Math.toIntExact(accountsRequest.getAcLevel()));
-        accounts.setAcParentIdx(parentIdx);
-        accounts.setAcName(accountsRequest.getAcName());
-        accounts.setAcSeq(accountsRequest.getAcSeq());
-        accountsRepository.save(accounts);
+        Accounts createAccounts = Accounts.builder()
+                .userIdx(userIdx)
+                .acLevel(createAccountsDTO.getAcLevel())
+                .acParentIdx(parentIdx)
+                .acMoneyType(createAccountsDTO.getAcMoneyType())
+                .acAmount(createAccountsDTO.getAcAmount())
+                .acName(createAccountsDTO.getAcName())
+                .acSeq(createAccountsDTO.getAcSeq())
+                .build();
+        accountsRepository.save(createAccounts);
 
         // 상위 레벨 자산 업데이트
-        Optional<Accounts> pAccounts = accountsRepository.findByAcIdx(parentIdx);
-        updateParentAcAmounts(pAccounts.get().getAcIdx(), 0L, acAmount);
-    }
-
-    public static Accounts setCommonAccounts(Long userIdx, AcMoneyType moneyType, Long acAmount) {
-        long amount = Optional.ofNullable(acAmount).orElse(0L);
-        Accounts accounts = new Accounts();
-        accounts.setUserIdx(userIdx);
-        accounts.setAcMoneyType(moneyType);
-        accounts.setAcAmount(amount);
-        accounts.setAcCreateAt(CommonUtil.getTimestamp());
-        return accounts;
+        Accounts pAccounts = accountsRepository.findById(parentIdx)
+                .orElseThrow(() -> new EntityNotFoundException("변경할 상위레벨이 없습니다."));   // 상위레벨 정보 추출
+        updateParentAcAmounts(pAccounts.getAcIdx(), 0L, createAccountsDTO.getAcAmount());
     }
 
     /* 
     * 최상위 레벨 자산 목록 생성
     * */
     public void makeBasicAccounts(Long userIdx, AcMoneyType moneyType) {
-        Accounts accounts = setCommonAccounts(userIdx, moneyType, 0L);
-        accounts.setAcLevel(1);
-        accounts.setAcName(AccountsCode.get(String.valueOf(moneyType)));
-        accountsRepository.save(accounts);
+        Accounts createAccounts = Accounts.builder()
+                .userIdx(userIdx)
+                .acLevel(1)
+                .acMoneyType(moneyType)
+                .acAmount(0L)
+                .acName(AccountsCode.get(String.valueOf(moneyType)))
+                .build();
+        accountsRepository.save(createAccounts);
     }
 
     /*
-     * 최상위 레벨 자산 확인
+     * 최상위 레벨 자산 유무 확인
      * */
-    public boolean getExistsByBasicAccounts(Long userIdx) {
+    public boolean isExistsByBasicAccounts(Long userIdx) {
         return accountsRepository.existsByUserIdx(userIdx);
     }
 
-    public boolean updateAccounts(Long acIdx, AccountsRequest accountsRequest) {
-        return accountsRepository.findByAcIdx(acIdx)
-                .map(origin -> {
-                    userValidation(origin.getUserIdx(), accountsRequest.getUserIdx());
-                    levelValidation(acIdx, "update");
+    public void updateAccounts(UpdateAccountsDTO updateAccountsDTO) {
+        Accounts accounts = accountsRepository.findById(updateAccountsDTO.getAcIdx())
+                .orElseThrow(() -> new EntityNotFoundException("변경할 자산이 없습니다."));
 
-                    Long oriAmt = origin.getAcAmount();
+        // 최상위레벨 수정/삭제 불가
+        levelValidation(updateAccountsDTO.getAcIdx(), "update");
 
-                    origin.setAcName(accountsRequest.getAcName());
-                    origin.setAcMoneyType(AcMoneyType.valueOf(accountsRequest.getAcMoneyType().toUpperCase()));
-                    origin.setAcLevel(accountsRequest.getAcLevel());
-                    origin.setAcParentIdx(accountsRequest.getAcParentIdx());
-                    origin.setAcSeq(accountsRequest.getAcSeq());
-                    origin.setAcAmount(accountsRequest.getAcAmount());
-                    origin.setAcUpdateAt(CommonUtil.getTimestamp());
-                    accountsRepository.save(origin);
+        Long oriAmt = accounts.getAcAmount();   // 상위레벨 자산 업데이트를 위해 기존자산 저장
 
-                    updateParentAcAmounts(accountsRequest.getAcParentIdx(), oriAmt, accountsRequest.getAcAmount());
-                    return true;
-                })
-                .orElse(false);
+        accounts.updateAccounts(updateAccountsDTO);
+        accountsRepository.save(accounts);
+
+        // 상위레벨 자산 업데이트
+        updateParentAcAmounts(updateAccountsDTO.getAcParentIdx(), oriAmt, updateAccountsDTO.getAcAmount());
     }
 
     /*
         상위레벨 ~ 최상위레벨까지 기존 자산, 입력 자산 차액만큼 update
     */
     public void updateParentAcAmounts(Long prtAcIdx, Long oriAmt, Long reqAmt) {
-        Long updateAmt = reqAmt - oriAmt;
-        accountsRepository.findByAcIdx(prtAcIdx)
-                .map(origin -> {
-                    Long prtOriAmt = origin.getAcAmount();
-                    origin.setAcAmount(prtOriAmt + updateAmt);
-                    accountsRepository.save(origin);
+        try {
+            Accounts accounts = accountsRepository.findById(prtAcIdx)
+                    .orElseThrow(() -> new EntityNotFoundException("상위 레벨이 존재하지 않습니다."));
 
-                    if(origin.getAcLevel() > 1) {
-                        updateParentAcAmounts(origin.getAcParentIdx(), prtOriAmt, origin.getAcAmount());
-                    }
-                    return true;
-                });
-    }
+            Long updateAmt = reqAmt - oriAmt;           // 요청금액(기존금액+신규금액) - 기존금액 = 신규금액
+            Long prtOriAmt = accounts.getAcAmount();    // 상위레벨 기존금액
 
-    public void deleteAccounts(Long acIdx, AccountsRequest accountsRequest) {
-        Optional<Accounts> accounts = accountsRepository.findByAcIdx(acIdx);
-        userValidation(accounts.get().getUserIdx(), accountsRequest.getUserIdx());
-        levelValidation(acIdx, "delete");
-        accountsRepository.deleteByAcIdx(acIdx);
-    }
+            // 상위레벨 업데이트 시 기존금액에 신규금액만 더해서 업데이트
+            accounts.updateAcAmount(prtAcIdx, prtOriAmt + updateAmt);
+            accountsRepository.save(accounts);
 
-    public void userValidation(Long userIdx, Long reqUserIdx) {
-        if(!userIdx.equals(reqUserIdx)) {
-            throw new RuntimeException("권한이 없습니다.");
+            if (accounts.getAcLevel() > 1) {
+                // 최상위 레벨이 아니면 최상위 레벨 찾아서 한번 더 더해준다.
+                updateParentAcAmounts(accounts.getAcParentIdx(), prtOriAmt, accounts.getAcAmount());
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw e;
         }
     }
 
+    public void deleteAccounts(Long acIdx) {
+        Accounts accounts = accountsRepository.findById(acIdx)
+                .orElseThrow(() -> new EntityNotFoundException("삭제할 자산이 없습니다."));
+        levelValidation(acIdx, "delete");
+        accountsRepository.deleteById(acIdx);
+    }
+
     public void levelValidation(Long acIdx, String type) {
-        Optional<Accounts> accounts = accountsRepository.findByAcIdx(acIdx);
-        int reqLevel = accounts.get().getAcLevel();
+        Accounts accounts = accountsRepository.findById(acIdx)
+                .orElseThrow(() -> new EntityNotFoundException("수정/삭제 할 수 없습니다."));
+        int reqLevel = accounts.getAcLevel();
         if(reqLevel == 1) {
             throw new RuntimeException("수정/삭제 불가");
         }

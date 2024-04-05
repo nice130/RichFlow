@@ -1,7 +1,8 @@
 package com.richflow.api.controller.accounts;
 
 import com.richflow.api.domain.accounts.Accounts;
-import com.richflow.api.request.accounts.AccountsRequest;
+import com.richflow.api.request.accounts.CreateAccountsDTO;
+import com.richflow.api.request.accounts.UpdateAccountsDTO;
 import com.richflow.api.response.accounts.AccountsResponse;
 import com.richflow.api.service.accounts.AccountsService;
 import lombok.RequiredArgsConstructor;
@@ -28,32 +29,29 @@ public class AccountsController {
     }
 
     @PostMapping("/")
-    public AccountsResponse createAccounts(@RequestBody AccountsRequest accountsRequest) {
+    public AccountsResponse createAccounts(@RequestBody CreateAccountsDTO createAccountsDTO) {
         try {
-            accountsService.createAccounts(accountsRequest);
+            accountsService.createAccounts(createAccountsDTO);
             return AccountsService.buildAccountsResponse(200);
         } catch (Exception e) {
             return AccountsService.buildAccountsResponse(600, String.valueOf(e));
         }
     }
 
-    @PatchMapping("/{acIdx}")
-    public AccountsResponse updateAccounts(@PathVariable Long acIdx, @RequestBody AccountsRequest accountsRequest) {
+    @PatchMapping()
+    public AccountsResponse updateAccounts(@RequestBody UpdateAccountsDTO updateAccountsDTO) {
         try {
-            if(accountsService.updateAccounts(acIdx, accountsRequest)) {
-                return AccountsService.buildAccountsResponse(200);
-            } else {
-                return AccountsService.buildAccountsResponse(501);
-            }
+            accountsService.updateAccounts(updateAccountsDTO);
+            return AccountsService.buildAccountsResponse(200);
         } catch (Exception e) {
             return AccountsService.buildAccountsResponse(600, String.valueOf(e));
         }
     }
 
     @DeleteMapping("/{acIdx}")
-    public AccountsResponse deleteAccounts(@PathVariable Long acIdx, @RequestBody AccountsRequest accountsRequest) {
+    public AccountsResponse deleteAccounts(@PathVariable Long acIdx) {
         try {
-            accountsService.deleteAccounts(acIdx, accountsRequest);
+            accountsService.deleteAccounts(acIdx);
             return AccountsService.buildAccountsResponse(200);
         } catch (Exception e) {
             log.info(e.getMessage());
