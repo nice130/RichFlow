@@ -1,6 +1,8 @@
 package com.richflow.api.domain.history;
 
 import com.richflow.api.converter.MoneyTypeConverter;
+import com.richflow.api.domain.accountingTypes.AccountingTypes;
+import com.richflow.api.domain.accounts.Accounts;
 import com.richflow.api.domain.enumType.ActEither;
 import com.richflow.api.domain.enumType.AcMoneyType;
 import com.richflow.api.request.history.UpdateHistoryDTO;
@@ -19,18 +21,14 @@ public class History {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long historyIdx;
 
-    private Long acIdx;
-
     private Long userIdx;
 
-    private Long actIdx;
-
     @Enumerated(EnumType.STRING)
+    @Column(name = "history_act_either")
     private ActEither historyActEither;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "history_ac_money_type")
-    @Convert(converter = MoneyTypeConverter.class)
     private AcMoneyType historyAcMoneyType;
 
     private String historyName;
@@ -44,6 +42,14 @@ public class History {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date historyUpdateAt;
+
+    @ManyToOne
+    @JoinColumn(name = "act_idx")
+    private AccountingTypes accountingTypes;
+
+    @ManyToOne
+    @JoinColumn(name = "ac_idx")
+    private Accounts accounts;
 
     @Builder
     public History(ActEither historyActEither, AcMoneyType historyAcMoneyType,
