@@ -21,5 +21,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor(this.tokenProvider))
             .addPathPatterns("/**")
             .excludePathPatterns("/", "/users/login", "/users/join", "/js/**", "/css/**", "/images/**","/error","/favicon.ico");
+//            .excludePathPatterns("/**"); // 개발용
     }
 }

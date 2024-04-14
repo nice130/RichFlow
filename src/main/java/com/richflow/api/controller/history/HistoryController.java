@@ -29,4 +29,10 @@ public class HistoryController {
         History updateHistory = historyService.updateHistory(updateDTO);
         return new ResponseEntity<>(updateHistory, HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("{userIdx}")
+    public ResponseEntity<History> getHistory(@PathVariable Long userIdx) {
+        History updateHistory = historyService.getHistory(userIdx);
+        return new ResponseEntity<>(updateHistory, HttpStatus.OK);
+    }
 }

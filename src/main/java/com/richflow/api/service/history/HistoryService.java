@@ -35,4 +35,8 @@ public class HistoryService {
         existingHistory.updateDetails(updateHistoryDTO);
         return historyRepository.save(existingHistory);
     }
+
+    public History getHistory(Long userIdx) {
+        return historyRepository.findByUserIdx(userIdx);
+    }
 }
